@@ -43,6 +43,12 @@ if (empty($phone)) {
     $errors[] = "Телефон должен содержать от 6 до 20 символов.";
 }
 
+$agreement = isset($_POST['agreement']);
+
+if (!$agreement) {
+    $errors[] = "Необходимо согласиться с правилами.";
+}
+
 if (!empty($errors)) {
     echo "<h2>Произошли ошибки:</h2>";
     foreach ($errors as $errors) {
@@ -54,3 +60,4 @@ if (!empty($errors)) {
 
 
 ?>
+
