@@ -51,7 +51,7 @@ if (!$agreement) {
 
 if (!empty($errors)) {
     echo "<h2>Произошли ошибки:</h2>";
-    foreach ($errors as $errors) {
+    foreach ($errors as $error) {
         echo "- $error<br>";
     }
 } else {
@@ -60,4 +60,5 @@ if (!empty($errors)) {
 
 
 ?>
+
 
