@@ -32,9 +32,20 @@ if (empty($languages)) {
     $errors[] = "Необходимо выбрать хотя бы один язык программирования.";
 }
 
+$phone = $_POST['phone'] ?? '';
+
+
+if (empty($phone)) {
+    $errors[] = "Поле 'Телефон' не может быть пустым.";
+} elseif (!preg_match('/^\+?[0-9\-]+$/', $phone)) { // + в начале, цифры и -
+    $errors[] = "Телефон введен некорректно.";
+} elseif (strlen($phone) < 6 || strlen($phone) > 20) {
+    $errors[] = "Телефон должен содержать от 6 до 20 символов.";
+}
+
 if (!empty($errors)) {
     echo "<h2>Произошли ошибки:</h2>";
-    foreach ($errors as $error) {
+    foreach ($errors as $errors) {
         echo "- $error<br>";
     }
 } else {
