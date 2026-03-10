@@ -15,28 +15,28 @@
             <form action="handler.php" method="POST">
                 <div class="form-group">
                     <label for="name-input">ФИО:</label>
-                    <input id="name-input" name="field-name-1" type="name" placeholder="Васькин Василий Васильевич" />
+                    <input id="name-input" name="fio" type="name" placeholder="Васькин Василий Васильевич" />
                 </div>
                 <div class="form-group">
                     <label for="tel-input">Телефон:</label>
-                    <input id="tel-input" name="field-tel" type="tel" placeholder="+7**********" />
+                    <input id="tel-input" name="phone" type="tel" placeholder="+7**********" />
                 </div>
                 <div class="form-group">
                     <label for="email-input">Текстовое поле email:</label>
-                    <input id="email-input" name="field-email" type="email" placeholder="Введите вашу почту" />
+                    <input id="email-input" name="email" type="email" placeholder="Введите вашу почту" />
                 </div>
                 <div class="form-group">
                     <label for="date-input">Дата рождения:</label>
-                    <input id="date-input" name="field-date" value="2006-08-13" type="date" />
+                    <input id="date-input" name="dateborn" value="2006-08-13" type="date" />
                 </div>
                 <div class="form-group">
                     <span>Пол:</span>
-                    <label><input type="radio" checked="checked" name="radio-group-1" value="Значение1" /> Мужской</label>
-                    <label><input type="radio" name="radio-group-1" value="Значение2" /> Женский</label>
+                    <label><input type="radio" checked="checked" name="gender" value="Значение1" /> Мужской</label>
+                    <label><input type="radio" name="gender" value="Значение2" /> Женский</label>
                 </div>
                 <div class="form-group">
                     <label for="lang-select">Ваш любимый язык программирования:</label>
-                    <select id="lang-select" name="field-name-4[]" multiple="multiple">
+                    <select id="lang-select" name="languages[]" multiple="multiple">
                         <option value="Значение1">Pascal</option>
                         <option value="Значение2" selected="selected">C</option>
                         <option value="Значение3" selected="selected">C++</option>
@@ -52,10 +52,10 @@
                 </div>
                 <div class="form-group">
                     <label for="bio-textarea">Биография:</label>
-                    <textarea id="bio-textarea" name="field-name-2">тут ваша биография</textarea>
+                    <textarea id="bio-textarea" name="bio">тут ваша биография</textarea>
                 </div>
                 <div class="form-group">
-                    <label><input type="checkbox" checked="checked" name="check-1" /> с контрактом ознакомлен (а)</label>
+                    <label><input type="checkbox" checked="checked" name="agreement" /> с контрактом ознакомлен (а)</label>
                 </div>
                 <input type="submit" value="Сохранить" class="knopka" />
             </form>
@@ -64,4 +64,5 @@
     </div>
 </body>
 </html>
+
 
