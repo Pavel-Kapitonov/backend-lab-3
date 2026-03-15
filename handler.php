@@ -1,9 +1,9 @@
 <?php
 $config = include('db_config.php');
 
-
-$name = $_POST['name'] ?? '';
-$tel = $_POST['tel'] ?? '';
+// 2. Получаем данные из $_POST
+$name = $_POST['fio'] ?? '';        
+$tel = $_POST['phone'] ?? '';      
 $email = $_POST['email'] ?? '';
 $dateborn = $_POST['dateborn'] ?? '';
 $gender = $_POST['gender'] ?? '';
@@ -12,18 +12,18 @@ $languages = $_POST['languages'] ?? [];
 $agreement = isset($_POST['agreement']);
 
 $errors = [];
-if (empty($name)) {
+
+if (empty($name)) { 
     $errors[] = "Поле ФИО пустое";
 } elseif (strlen($name) > 150) {
     $errors[] = "ФИО слишком длинное";
 } elseif (!preg_match('/^[a-zA-Zа-яёА-ЯЁ ]+$/u', $name)) {
-    $errors[] = "В  ФИО можно только буквы и пробелы";
+    $errors[] = "В ФИО можно только буквы и пробелы";
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $errors[] = "Почта введена неправильно";
 }
-
 
 if (empty($gender)) {
     $errors[] = "Поле 'Пол' не может быть пустым.";
@@ -35,9 +35,9 @@ if (empty($languages)) {
     $errors[] = "Необходимо выбрать хотя бы один язык программирования.";
 }
 
-if (empty($tel)) {
+if (empty($tel)) { 
     $errors[] = "Поле 'Телефон' не может быть пустым.";
-} elseif (!preg_match('/^\+?[0-9\-]+$/', $tel)) { // + в начале, цифры и -
+} elseif (!preg_match('/^\+?[0-9\-]+$/', $tel)) {
     $errors[] = "Телефон введен некорректно.";
 } elseif (strlen($tel) < 6 || strlen($tel) > 20) {
     $errors[] = "Телефон должен содержать от 6 до 20 символов.";
@@ -49,9 +49,12 @@ if (!$agreement) {
 
 if (!empty($errors)) {
     echo "<h2>Ошибки:</h2>";
-    foreach ($errors as $error) { echo "- $error<br>"; }
+    foreach ($errors as $error) { 
+        echo "- $error<br>"; 
+    }
     exit;
 }
+
 
 try {
     $db = new PDO(
@@ -62,6 +65,7 @@ try {
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $db->beginTransaction();
+
 
     $stmt = $db->prepare("INSERT INTO Request (name, tel, email, dateborn, gender, bio, agreed) 
                           VALUES (:name, :tel, :email, :dateborn, :gender, :bio, :agreed)");
@@ -88,7 +92,6 @@ try {
         }
     }
 
-    // Если всё прошло успешно — фиксируем изменения
     $db->commit();
     echo "<h2>Данные успешно сохранены!</h2>";
 
@@ -96,5 +99,4 @@ try {
     if ($db->inTransaction()) $db->rollBack();
     echo "Ошибка базы данных: " . $e->getMessage();
 }
-
 
