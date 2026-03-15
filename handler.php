@@ -1,9 +1,17 @@
 <?php
+$config = include('db_config.php');
 
-$fio = $_POST['fio'] ?? '';
+
+$name = $_POST['fio'] ?? '';
+$tel = $_POST['phone'] ?? '';
+$email = $_POST['email'] ?? '';
+$dateborn = $_POST['dateborn'] ?? '';
+$gender = $_POST['gender'] ?? '';
+$bio = $_POST['bio'] ?? '';
+$languages = $_POST['languages'] ?? [];
+$agreement = isset($_POST['agreement']);
 
 $errors = [];
-
 if (empty($fio)) {
     $errors[] = "Поле ФИО пустое";
 } elseif (strlen($fio) > 150) {
@@ -12,13 +20,10 @@ if (empty($fio)) {
     $errors[] = "В  ФИО можно только буквы и пробелы";
 }
 
-$email = $_POST['email'] ?? '';
-
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $errors[] = "Почта введена неправильно";
 }
 
-$gender = $_POST['gender'] ?? ''; 
 
 if (empty($gender)) {
     $errors[] = "Поле 'Пол' не может быть пустым.";
@@ -26,14 +31,9 @@ if (empty($gender)) {
     $errors[] = "Выбран недопустимый пол.";
 }
 
-$languages = $_POST['languages'] ?? [];
-
 if (empty($languages)) {
     $errors[] = "Необходимо выбрать хотя бы один язык программирования.";
 }
-
-$phone = $_POST['phone'] ?? '';
-
 
 if (empty($phone)) {
     $errors[] = "Поле 'Телефон' не может быть пустым.";
@@ -43,22 +43,58 @@ if (empty($phone)) {
     $errors[] = "Телефон должен содержать от 6 до 20 символов.";
 }
 
-$agreement = isset($_POST['agreement']);
-
 if (!$agreement) {
     $errors[] = "Необходимо согласиться с правилами.";
 }
 
 if (!empty($errors)) {
-    echo "<h2>Произошли ошибки:</h2>";
-    foreach ($errors as $error) {
-        echo "- $error<br>";
-    }
-} else {
-    echo "<h2>Данные прошли проверку</h2>";
+    echo "<h2>Ошибки:</h2>";
+    foreach ($errors as $error) { echo "- $error<br>"; }
+    exit;
 }
 
+try {
+    $db = new PDO(
+        "mysql:host={$config['host']};dbname={$config['dbname']};charset=utf8", 
+        $config['user'], 
+        $config['pass']
+    );
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-?>
+    $db->beginTransaction();
+
+    $stmt = $db->prepare("INSERT INTO Request (name, tel, email, dateborn, gender, bio, agreed) 
+                          VALUES (:name, :tel, :email, :dateborn, :gender, :bio, :agreed)");
+    $stmt->execute([
+        ':name' => $name,
+        ':tel' => $tel,
+        ':email' => $email,
+        ':dateborn' => $dateborn,
+        ':gender' => $gender,
+        ':bio' => $bio,
+        ':agreed' => $agreement ? 1 : 0
+    ]);
+
+    $requestId = $db->lastInsertId();
+
+    $getLangId = $db->prepare("SELECT language_id FROM Language WHERE language_name = ?");
+    $insertConn = $db->prepare("INSERT INTO Connection (request_id, language_id) VALUES (?, ?)");
+
+    foreach ($languages as $langName) {
+        $getLangId->execute([$langName]);
+        $row = $getLangId->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            $insertConn->execute([$requestId, $row['language_id']]);
+        }
+    }
+
+    // Если всё прошло успешно — фиксируем изменения
+    $db->commit();
+    echo "<h2>Данные успешно сохранены!</h2>";
+
+} catch (PDOException $e) {
+    if ($db->inTransaction()) $db->rollBack();
+    echo "Ошибка базы данных: " . $e->getMessage();
+}
 
 
