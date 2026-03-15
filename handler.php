@@ -12,11 +12,11 @@ $languages = $_POST['languages'] ?? [];
 $agreement = isset($_POST['agreement']);
 
 $errors = [];
-if (empty($fio)) {
+if (empty($name)) {
     $errors[] = "Поле ФИО пустое";
-} elseif (strlen($fio) > 150) {
+} elseif (strlen($name) > 150) {
     $errors[] = "ФИО слишком длинное";
-} elseif (!preg_match('/^[a-zA-Zа-яёА-ЯЁ ]+$/u', $fio)) {
+} elseif (!preg_match('/^[a-zA-Zа-яёА-ЯЁ ]+$/u', $name)) {
     $errors[] = "В  ФИО можно только буквы и пробелы";
 }
 
@@ -35,11 +35,11 @@ if (empty($languages)) {
     $errors[] = "Необходимо выбрать хотя бы один язык программирования.";
 }
 
-if (empty($phone)) {
+if (empty($tel)) {
     $errors[] = "Поле 'Телефон' не может быть пустым.";
-} elseif (!preg_match('/^\+?[0-9\-]+$/', $phone)) { // + в начале, цифры и -
+} elseif (!preg_match('/^\+?[0-9\-]+$/', $tel)) { // + в начале, цифры и -
     $errors[] = "Телефон введен некорректно.";
-} elseif (strlen($phone) < 6 || strlen($phone) > 20) {
+} elseif (strlen($tel) < 6 || strlen($tel) > 20) {
     $errors[] = "Телефон должен содержать от 6 до 20 символов.";
 }
 
