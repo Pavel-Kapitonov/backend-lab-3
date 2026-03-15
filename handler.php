@@ -2,8 +2,8 @@
 $config = include('db_config.php');
 
 
-$name = $_POST['fio'] ?? '';
-$tel = $_POST['phone'] ?? '';
+$name = $_POST['name'] ?? '';
+$tel = $_POST['tel'] ?? '';
 $email = $_POST['email'] ?? '';
 $dateborn = $_POST['dateborn'] ?? '';
 $gender = $_POST['gender'] ?? '';
