@@ -1,7 +1,7 @@
 <?php
 $config = include('db_config.php');
 
-// 2. Получаем данные из $_POST
+
 $name = $_POST['fio'] ?? '';        
 $tel = $_POST['phone'] ?? '';      
 $email = $_POST['email'] ?? '';
